@@ -11,10 +11,10 @@ import java.util.*;
 
 @Service
 public class EmployeeService {
-    private static final int employeeCount = 5;
-    private final Map<String, Employee> employees = new HashMap<>();
+    private static final int employeeCount = 10;
+    private final Map<String, Employee> employees = new HashMap<>(employeeCount);
 
-    public Employee createEmployee(String firstName, String lastName) {
+    public Employee createEmployee(String firstName, String lastName, int salary, int department) {
         if (employees.size() >= employeeCount) {
             throw new EmployeeStorageIsFullException();
         }
@@ -28,7 +28,7 @@ public class EmployeeService {
         if (employees.containsKey(key)) {
             throw new EmployeeAlreadyAddedException();
         }
-        Employee employee = new Employee(firstName, lastName);
+        Employee employee = new Employee(firstName, lastName, salary, department);
         employees.put(key, employee);
         return employee;
     }

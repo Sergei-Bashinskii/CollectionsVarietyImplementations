@@ -1,10 +1,10 @@
 package com.example.Collections.sheets.and.sets.service;
 
-import com.example.Collections.sheets.and.sets.exception.EmployeeAlreadyAddedException;
-import com.example.Collections.sheets.and.sets.exception.EmployeeNotFoundException;
-import com.example.Collections.sheets.and.sets.exception.EmployeeStorageIsFullException;
+import com.example.Collections.sheets.and.sets.exception.*;
 import com.example.Collections.sheets.and.sets.exception.IllegalArgumentException;
+import com.example.Collections.sheets.and.sets.helper.HelperNull;
 import com.example.Collections.sheets.and.sets.model.Employee;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,26 +19,26 @@ public class EmployeeService {
             throw new EmployeeStorageIsFullException();
         }
         String key = getKey(firstName, lastName);
-        if (firstName == null || firstName.isEmpty()) {
+        if (HelperNull.isEmptyString(firstName) || HelperNull.isEmptyString(lastName)) {
             throw new IllegalArgumentException();
         }
-        if (lastName == null || lastName.isEmpty()) {
-            throw new IllegalArgumentException();
+        if (!StringUtils.isAlpha(firstName) || !StringUtils.isAlpha(lastName)) {
+            throw new InputException();
         }
         if (employees.containsKey(key)) {
             throw new EmployeeAlreadyAddedException();
         }
-        Employee employee = new Employee(firstName, lastName, salary, department);
+        Employee employee = new Employee(StringUtils.capitalize(firstName), StringUtils.capitalize(lastName), salary, department);
         employees.put(key, employee);
         return employee;
     }
 
     public Employee removeEmployee(String firstName, String lastName) {
-        if (firstName == null || firstName.isEmpty()) {
+        if (HelperNull.isEmptyString(firstName) || HelperNull.isEmptyString(lastName)) {
             throw new IllegalArgumentException();
         }
-        if (lastName == null || lastName.isEmpty()) {
-            throw new IllegalArgumentException();
+        if (!StringUtils.isAlpha(firstName) || !StringUtils.isAlpha(lastName)) {
+            throw new InputException();
         }
         Employee employee = employees.remove(getKey(firstName, lastName));
         if (employee == null) {
@@ -48,11 +48,11 @@ public class EmployeeService {
     }
 
     public Employee findEmployee(String firstName, String lastName) {
-        if (firstName == null || firstName.isEmpty()) {
+        if (HelperNull.isEmptyString(firstName) || HelperNull.isEmptyString(lastName)) {
             throw new IllegalArgumentException();
         }
-        if (lastName == null || lastName.isEmpty()) {
-            throw new IllegalArgumentException();
+        if (!StringUtils.isAlpha(firstName) || !StringUtils.isAlpha(lastName)) {
+            throw new InputException();
         }
         String key = getKey(firstName, lastName);
         Employee employee = employees.get(key);
@@ -67,6 +67,6 @@ public class EmployeeService {
     }
 
     private String getKey(String firstName, String lastName) {
-        return firstName + lastName;
+        return StringUtils.capitalize(firstName) + StringUtils.capitalize(lastName);
     }
 }

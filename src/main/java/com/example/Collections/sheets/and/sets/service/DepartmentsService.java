@@ -29,6 +29,13 @@ public class DepartmentsService {
                 .orElse(null);
     }
 
+    public int getSalarySumByDepartment(int departmentId) {
+        return employeeService.getEmployees().stream()
+                .filter(employee -> employee.getDepartmentId() == departmentId)
+                .map(Employee::getSalary)
+                .reduce(0, Integer::sum);
+    }
+
     public Collection<Employee> findByDepartmentId(int departmentId){
         return employeeService.getEmployees().stream()
                 .filter(e -> e.getDepartmentId() == departmentId)
